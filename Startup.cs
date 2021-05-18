@@ -1,4 +1,8 @@
 using DatingAppAPI.Data;
+using DatingAppAPI.Extensions;
+using DatingAppAPI.Interfaces;
+using DatingAppAPI.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -8,10 +12,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace DatingAppAPI
@@ -28,11 +34,13 @@ namespace DatingAppAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<DataContext>(options =>
-            {
-                options.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
-            });
+            services.AddApplication(Configuration);
+
             services.AddControllers();
+
+            services.AddIdentityServices(Configuration);
+
+            services.AddCors();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "DatingAppAPI", Version = "v1" });
@@ -52,6 +60,11 @@ namespace DatingAppAPI
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors(x=>x.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:4200"));
+
+            //Important
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
