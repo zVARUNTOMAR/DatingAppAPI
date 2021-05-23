@@ -8,6 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using DatingAppAPI.Helpers;
 
 namespace DatingAppAPI.Extensions
 {
@@ -16,6 +18,9 @@ namespace DatingAppAPI.Extensions
         public static IServiceCollection AddApplication(this IServiceCollection services, IConfiguration config) {
 
             services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
+
             services.AddDbContext<DataContext>(options =>
             {
                 options.UseSqlite(config.GetConnectionString("DefaultConnection"));
