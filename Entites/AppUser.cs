@@ -39,10 +39,11 @@ namespace DatingAppAPI.Entites
 
         public ICollection<Photo> Photos { get; set; }
 
-        public int GetAge() {
+        //Current Users liked by other users
+        public ICollection<UserLike> LikedByUsers { get; set; }
 
-            return DateOfBirth.calcAge();
-        }
+        //Current User liked other users
+        public ICollection<UserLike> LikedUsers { get; set; }
 
     }
 }

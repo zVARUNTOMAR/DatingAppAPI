@@ -18,6 +18,7 @@ namespace DatingAppAPI.Extensions
         public static IServiceCollection AddApplication(this IServiceCollection services, IConfiguration config) {
 
             services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));
+            services.AddScoped<ILikesRepository, LikesRepository>();
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IPhotoService, PhotoService>();
             services.AddScoped<IUserRepository, UserRepository>();
